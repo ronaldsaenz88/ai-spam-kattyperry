@@ -21,15 +21,17 @@ from nltk.tokenize import word_tokenize
 import warnings
 warnings.filterwarnings('ignore')
 
-
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.feature_extraction.text import CountVectorizer
 
-
 from sklearn.naive_bayes import GaussianNB 
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import cross_val_score
+
+from sklearn.metrics import confusion_matrix
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 import re, string, unicodedata
 import contractions
@@ -106,6 +108,13 @@ def replace_numbers(words):
     return "".join(new_words)
 
 
+def find(x):
+    if x == 1:
+        return "Message is SPAM"
+    else:
+        return "Message is NOT Spam"
+    
+    
 #############################################################################################################################
 # a. Get the data 
 #############################################################################################################################
@@ -133,7 +142,6 @@ print(kattyperry_data)
 2. Carry out some basic data exploration and present your results.
      (Note: You only need two columns for this project, make sure you identify them correctly, if any doubts ask your professor)
 '''
-
 
 print('\n**** Initial Exploration ****')
 
@@ -188,9 +196,6 @@ kattyperry_data_prep = kattyperry_data.drop(columns=["COMMENT_ID", "DATE", "AUTH
 5. Downscale the transformed data using tf-idf and again present highlights of the output (final features) 
     such as the new shape of the data and any other useful information before proceeding.
 
-6. Use pandas.sample to shuffle the dataset, set frac =1 
-
-
 '''
 
 #storing the puntuation free text
@@ -205,7 +210,6 @@ kattyperry_data_pre['CONTENT2'] = kattyperry_data_pre['CONTENT2'].apply(lambda x
 kattyperry_data_pre['CONTENT2'] = kattyperry_data_pre['CONTENT2'].apply(lambda x:text_process(x))
 kattyperry_data_pre.head()
 
-
 ## Build a count vectorizer and extract term counts 
 count_vectorizer = CountVectorizer(lowercase=True)
 train_tc = count_vectorizer.fit_transform(kattyperry_data_pre['CONTENT2'])
@@ -216,7 +220,6 @@ print(train_tc)
 ## Vocabulary
 vocabulary = np.array(count_vectorizer.get_feature_names())
 print("\nVocabulary:\n", vocabulary)
-
 
 #This downscaling is called tf–idf for “Term Frequency times Inverse Document Frequency”.
 # Create the tf-idf transformer
@@ -234,44 +237,39 @@ dfeatures['content'] = kattyperry_data_pre['CONTENT2']
 dfeatures['target'] = kattyperry_data_pre['CLASS']
 dfeatures['vector'] = dfeatures[0]
 
-# Create and train a Multinomial Naive Bayes classifier
-#classifier = MultinomialNB().fit(X, Y)
-
-
 #############################################################################################################################
 # d. Fit the training data 
 #############################################################################################################################
+
+'''
+6. Use pandas.sample to shuffle the dataset, set frac =1 
+7. Using pandas split your dataset into 75% for training and 25% for testing, 
+    make sure to separate the class from the feature(s). (Do not use test_train_ split)
+8. Fit the training data into a Naive Bayes classifier. 
+'''
 
 train_size = round(0.75 * dfeatures.shape[0])
 dfeatures_sample = dfeatures.sample(frac=1, random_state=1)
 dfeatures_training = dfeatures_sample.iloc[0:train_size-1] 
 dfeatures_test = dfeatures_sample.iloc[train_size:]
 
-
 print(f"No. of training examples: {dfeatures_training.shape[0]}")
 print(f"No. of testing examples: {dfeatures_test.shape[0]}")
-
 
 X_train = dfeatures_training['content']
 Y_train = dfeatures_training['target']
 X_test = dfeatures_test['content']
 Y_test = dfeatures_test['target']
 
-
-
-
-
 ## Build a count vectorizer and extract term counts 
 count_vectorizer2 = CountVectorizer(lowercase=True)
 train_tc_tr = count_vectorizer.fit_transform(X_train)
 print("\nDimensions of training data:", train_tc_tr.shape)
-
 print(train_tc_tr)
 
 ## Vocabulary
 vocabulary3 = np.array(count_vectorizer.get_feature_names())
 print("\nVocabulary:\n", vocabulary3)
-
 
 #This downscaling is called tf–idf for “Term Frequency times Inverse Document Frequency”.
 # Create the tf-idf transformer
@@ -284,12 +282,13 @@ print(train_tfidf_tr)
 classifier = MultinomialNB().fit(X_tr, Y_tr)
 
 
-
-
 #############################################################################################################################
 # E. VALIDATE MODEL 
 #############################################################################################################################
 
+'''
+9. Cross validate the model on the training data using 5-fold and print the mean results of model accuracy.
+'''
 
 # Transform input data using count vectorizer
 input_test = count_vectorizer.transform(X_test)
@@ -309,9 +308,8 @@ print(X_test_tfidf.shape)
 accuracy = 100.0 * (Y_test == Y_test_pred).sum() / X_test_tfidf.shape[0]
 print("Accuracy of Naive Bayes classifier =", round(accuracy, 2), "%")
 
-
 ###############################################
-# Scoring functions  -- REVISAR 
+# Cross validate - Scoring functions 
 
 num_folds = 5
 accuracy_values = cross_val_score(classifier, X, Y, scoring='accuracy', cv=num_folds)
@@ -326,18 +324,38 @@ print("Recall: " + str(round(100*recall_values.mean(), 2)) + "%")
 f1_values = cross_val_score(classifier, X, Y, scoring='f1_weighted', cv=num_folds)
 print("F1: " + str(round(100*f1_values.mean(), 2)) + "%")
 
+###############################################
+# Confusion Matrix
+
+# Checking Classification Results with Confusion Matrix
+# Naive Bayes
+y_pred_nb = classifier.predict(X_test_tfidf)
+y_true_nb = Y_test
+cm = confusion_matrix(y_true_nb, y_pred_nb)
+f, ax = plt.subplots(figsize =(5,5))
+sns.heatmap(cm,annot = True,linewidths=0.5,linecolor="red",fmt = ".0f",ax=ax)
+plt.xlabel("y_pred_nb")
+plt.ylabel("y_true_nb")
+plt.show()
 
 
 #############################################################################################################################
 # F. TEST MODEL 
 #############################################################################################################################
 
+'''
+10. Test the model on the test data, print the confusion matrix and the accuracy of the model.
+11. As a group come up with 6 new comments (4 comments should be non spam and 2 comment spam)
+     and pass them to the classifier and check the results. 
+     You can be very creative and even do more happy with light skin tone emoticon.
+'''
+
 # Define test data 
 input_data = [
     'You need to be careful with cars when you are driving on slippery roads', 
     'A lot of devices can be operated wirelessly',
     'Players need to be careful when they are close to goal posts',
-    'Political debates help us understand the perspectives of both sides',
+    'debates us understand the perspectives of both sides',
     'A feel pain every morning',
     'I got a speed ticket this morning comming to work',
     'I study a lot to improve my life',
@@ -349,7 +367,20 @@ input_data = [
     'free money',
     'FRee ',
     'Click http://www.com',
-    'YOu win the lottery'
+    'YOu win the lottery',
+    'love this song﻿	',
+    'I love you Katty',
+    'Katty perry You are the best',
+    'Katty you rock',
+    'Katty is the best singer around the world!!!!',
+    'Free Katty',
+    'Help me Katty',
+    'Join me Katty',
+    'Help me Katty, I need money',
+    'Check out my music niggas﻿',
+    'SUBSCRIBE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!﻿	',
+    'Check out this video on YouTube:..🌈🌈🌈',
+    'Party rock﻿'
 ]
 
 
@@ -368,14 +399,5 @@ predictions = classifier.predict(input_tfidf)
 
 # Print the outputs
 for sent, category in zip(input_data, predictions):
-    print('\nInput:', sent, '\nPredicted category:', category)
+    print('\nInput:', sent, '\nPredicted category:', category, '\n', find(category))
         
-
-
-
-
-
-
-
-
-
