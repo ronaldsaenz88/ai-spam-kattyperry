@@ -49,7 +49,7 @@ def fnc_clean_contractions(text):
 def fnc_clean_url(text):
     """ Function Clean Contractions: Remove URLs/Links from text """
     #return re.sub(r"http\S+", "", text)
-    return re.sub(r"http\S+", "<URL>", text)
+    return re.sub(r"http\S+", "URL", text)
 
 def fnc_clean_non_ascii(text):
     """ Function Clean Non Ascii: Remove Non-Ascii characters from text """

@@ -116,9 +116,23 @@ kattyperry_data_prep = kattyperry_data.drop(columns=["COMMENT_ID", "DATE", "AUTH
 
 '''
 
+# Before the pre processing (cleaning data)
+
+## Build a count vectorizer and extract term counts 
+count_vectorizer0 = CountVectorizer(lowercase=True)
+train_tc0 = count_vectorizer0.fit_transform(kattyperry_data_pre['CONTENT'])
+print("\nDimensions of initial data:", train_tc0.shape)
+#print(train_tc)
+
+## Vocabulary
+vocabulary0 = np.array(count_vectorizer0.get_feature_names())
+print("\nVocabulary Initial:\n", vocabulary0)
+
+
 #storing the puntuation free text
 kattyperry_data_pre = kattyperry_data_prep
 kattyperry_data_pre['CONTENT2'] = kattyperry_data_pre['CONTENT']
+kattyperry_data_pre['CONTENT2'] = kattyperry_data_pre['CONTENT2'].apply(lambda x:utilities.fnc_clean_url(x))
 kattyperry_data_pre['CONTENT2'] = kattyperry_data_pre['CONTENT2'].apply(lambda x:utilities.fnc_clean_non_ascii(x))
 kattyperry_data_pre['CONTENT2'] = kattyperry_data_pre['CONTENT2'].apply(lambda x:utilities.fnc_clean_lowercase(x))
 kattyperry_data_pre['CONTENT2'] = kattyperry_data_pre['CONTENT2'].apply(lambda x:utilities.fnc_clean_contractions(x))
@@ -131,6 +145,8 @@ kattyperry_data_pre['CONTENT2'] = kattyperry_data_pre['CONTENT2'].apply(lambda x
 kattyperry_data_pre.head()
 
 
+# After the pre processing (cleaning data)
+
 ## Build a count vectorizer and extract term counts 
 count_vectorizer = CountVectorizer(lowercase=True)
 train_tc = count_vectorizer.fit_transform(kattyperry_data_pre['CONTENT2'])
@@ -139,7 +155,7 @@ print("\nDimensions of vector data:", train_tc.shape)
 
 ## Vocabulary
 vocabulary = np.array(count_vectorizer.get_feature_names())
-print("\nVocabulary:\n", vocabulary)
+print("\nVocabulary of Clean Data:\n", vocabulary)
 
 #This downscaling is called tf–idf for “Term Frequency times Inverse Document Frequency”.
 # Create the tf-idf transformer
@@ -190,7 +206,7 @@ print("\nDimensions of training data:", train_tc_tr.shape)
 
 ## Vocabulary
 vocabulary3 = np.array(count_vectorizer.get_feature_names())
-print("\nVocabulary:\n", vocabulary3)
+print("\nVocabulary of training:\n", vocabulary3)
 
 #This downscaling is called tf–idf for “Term Frequency times Inverse Document Frequency”.
 # Create the tf-idf transformer
