@@ -185,7 +185,7 @@ dfeatures['vector'] = dfeatures[0]
 '''
 
 train_size = round(0.75 * dfeatures.shape[0])
-dfeatures_sample = dfeatures.sample(frac=1, random_state=1)
+dfeatures_sample = dfeatures.sample(frac=1, random_state=30)
 dfeatures_training = dfeatures_sample.iloc[0:train_size-1] 
 dfeatures_test = dfeatures_sample.iloc[train_size:]
 
@@ -289,16 +289,17 @@ plt.show()
 
 # Define test data 
 input_data = [
-    'joIN ME',
-    'Click here http://www.com',
-    'You win the lottery',
-    'love this song	',
-    'I love you Katty',
-    'Katty is the best singer around the world!!!!',
-    'Free Katty Perry',
-    'Help me Katty, I need money',
-    'SUBSCRIBE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!	',
-    'Check out this video on YouTube:..🌈🌈🌈'
+    #'joIN ME',
+    #'Click here http://www.com',
+    #'You win the lottery',
+    #'love this song	',
+    #'I love you Katty',
+    #'Katty is the best singer around the world!!!!',
+    #'Free Katty Perry',
+    #'Help me Katty, I need money',
+    #'SUBSCRIBE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!	',
+    #'Check out this video on YouTube:..🌈🌈🌈',
+    'asjdfl laksfjlkasf afasdf a oieruoie lkjsd iuroie lksd kasiueroi lkdj doiaurelk jlkdssjflkasdjfi ei eirjelk rt444453454545435'
 ]
 
 
