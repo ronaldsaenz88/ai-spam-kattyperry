@@ -75,7 +75,7 @@ def fnc_clean_numbers(text):
         if word.isdigit():
             new_word = p.number_to_words(word)
             #new_word = "<NUM>"
-            new_word = "NUM"
+            new_word = "NUM "
             new_text.append(new_word)
         else:
             new_text.append(word)

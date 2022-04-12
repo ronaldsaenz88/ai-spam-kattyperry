@@ -116,6 +116,9 @@ kattyperry_data_prep = kattyperry_data.drop(columns=["COMMENT_ID", "DATE", "AUTH
 
 '''
 
+kattyperry_data_pre = kattyperry_data_prep
+
+
 # Before the pre processing (cleaning data)
 
 ## Build a count vectorizer and extract term counts 
@@ -125,12 +128,11 @@ print("\nDimensions of initial data:", train_tc0.shape)
 #print(train_tc)
 
 ## Vocabulary
-vocabulary0 = np.array(count_vectorizer0.get_feature_names())
-print("\nVocabulary Initial:\n", vocabulary0)
+vocabulary_initial = np.array(count_vectorizer0.get_feature_names())
+print("\nVocabulary Initial:\n", vocabulary_initial)
 
 
-#storing the puntuation free text
-kattyperry_data_pre = kattyperry_data_prep
+# Clean data
 kattyperry_data_pre['CONTENT2'] = kattyperry_data_pre['CONTENT']
 kattyperry_data_pre['CONTENT2'] = kattyperry_data_pre['CONTENT2'].apply(lambda x:utilities.fnc_clean_url(x))
 kattyperry_data_pre['CONTENT2'] = kattyperry_data_pre['CONTENT2'].apply(lambda x:utilities.fnc_clean_non_ascii(x))
@@ -154,8 +156,8 @@ print("\nDimensions of vector data:", train_tc.shape)
 #print(train_tc)
 
 ## Vocabulary
-vocabulary = np.array(count_vectorizer.get_feature_names())
-print("\nVocabulary of Clean Data:\n", vocabulary)
+vocabulary_clean_data = np.array(count_vectorizer.get_feature_names())
+print("\nVocabulary of Clean Data:\n", vocabulary_clean_data)
 
 #This downscaling is called tf–idf for “Term Frequency times Inverse Document Frequency”.
 # Create the tf-idf transformer
@@ -205,8 +207,8 @@ print("\nDimensions of training data:", train_tc_tr.shape)
 #print(train_tc_tr)
 
 ## Vocabulary
-vocabulary3 = np.array(count_vectorizer.get_feature_names())
-print("\nVocabulary of training:\n", vocabulary3)
+vocabulary_training = np.array(count_vectorizer.get_feature_names())
+print("\nVocabulary of training:\n", vocabulary_training)
 
 #This downscaling is called tf–idf for “Term Frequency times Inverse Document Frequency”.
 # Create the tf-idf transformer
@@ -325,6 +327,7 @@ input_data = [
 input_tc = count_vectorizer.transform(input_data)
 #type(input_tc)
 #print(input_tc)
+
 
 # Transform vectorized data using tfidf transformer
 input_tfidf = tfidf.transform(input_tc)
