@@ -75,7 +75,7 @@ def fnc_clean_numbers(text):
         if word.isdigit():
             new_word = p.number_to_words(word)
             #new_word = "<NUM>"
-            new_word = "NUM "
+            new_word = " NUM "
             new_text.append(new_word)
         else:
             new_text.append(word)
@@ -94,20 +94,21 @@ def fnc_lemmatize_nouns(text):
     """ Function Lemmatize nouns: Used WordNetLemmatizer from ntlkt """
     lemmatizer = WordNetLemmatizer()
     new_text = []
-    #tokens = word_tokenize(text)
-    for word in text:
+    tokenized_words = nltk.word_tokenize(text)
+    for word in tokenized_words:
         lemma = lemmatizer.lemmatize(word, pos='n')
         new_text.append(lemma)
-    return "".join(new_text)
+    return " ".join(new_text)
 
 def fnc_lemmatize_verbs(text):
     """ Function Lemmatize verbs: Used WordNetLemmatizer from ntlkt """
     lemmatizer = WordNetLemmatizer()
     new_text = []
-    for word in text:
+    tokenized_words = nltk.word_tokenize(text)
+    for word in tokenized_words:
         lemma = lemmatizer.lemmatize(word, pos='v')
         new_text.append(lemma)
-    return "".join(new_text)
+    return " ".join(new_text)
 
 def fnc_clean_stopwords(text):
     """ Function Clean StopWords: By using stopwords from nltk, we clean the data using words in English """

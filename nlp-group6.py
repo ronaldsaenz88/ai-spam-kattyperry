@@ -231,6 +231,7 @@ classifier = MultinomialNB().fit(X_tr, Y_tr)
 
 # Transform input data using count vectorizer
 input_test = count_vectorizer.transform(X_test)
+print("\nDimensions of testing data:", input_test.shape)
 #type(input_test)
 #print(input_test)
 
@@ -291,22 +292,11 @@ plt.show()
 
 # Define test data 
 input_data = [
-    'You need to be careful with cars when you are driving on slippery roads', 
-    'A lot of devices can be operated wirelessly',
-    'Players need to be careful when they are close to goal posts',
-    'debates us understand the perspectives of both sides',
-    'A feel pain every morning',
-    'I got a speed ticket this morning comming to work',
-    'I study a lot to improve my life',
     'Barcelona won its game',
-    'Click here',
-    'www.facebook.com/asfdfd',
     'joIN ME',
-    'hOLA SOY RONALD',
     'free money',
-    'FRee ',
-    'Click http://www.com',
-    'YOu win the lottery',
+    'Click here http://www.com',
+    'You win the lottery',
     'love this song	',
     'I love you Katty',
     'Katty perry You are the best',
@@ -317,9 +307,8 @@ input_data = [
     'Join me Katty',
     'Help me Katty, I need money',
     'Check out my music niggas',
-    'SUBSCRIBE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!	',
-    'Check out this video on YouTube:..🌈🌈🌈',
-    'Party rock'
+    'SUBSCRIBE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!	',
+    'Check out this video on YouTube:..🌈🌈🌈'
 ]
 
 
