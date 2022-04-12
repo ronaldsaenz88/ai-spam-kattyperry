@@ -18,20 +18,18 @@ Stemming
 Lemmatization
 """
 
-import re, string, unicodedata
-
-# before you should install those libraries with pip 
-# pip install contractions inflect
-import contractions
-import inflect
+import re, unicodedata
 
 import nltk
 nltk.download('stopwords')
 from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
-from nltk.classify import textcat
 from nltk.stem import LancasterStemmer, WordNetLemmatizer
 
+# before you should install those libraries with pip 
+# pip install contractions 
+# pip install inflect
+import contractions
+import inflect
 
 def fnc_clean_punctuation(text):
     """ Function Clean Punctuation: Remove punctuation from text """
