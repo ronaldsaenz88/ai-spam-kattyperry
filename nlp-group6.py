@@ -292,21 +292,14 @@ plt.show()
 
 # Define test data 
 input_data = [
-    'Barcelona won its game',
     'joIN ME',
-    'free money',
     'Click here http://www.com',
     'You win the lottery',
     'love this song	',
     'I love you Katty',
-    'Katty perry You are the best',
-    'Katty you rock',
     'Katty is the best singer around the world!!!!',
-    'Free Katty',
-    'Help me Katty',
-    'Join me Katty',
+    'Free Katty Perry',
     'Help me Katty, I need money',
-    'Check out my music niggas',
     'SUBSCRIBE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!	',
     'Check out this video on YouTube:..🌈🌈🌈'
 ]
